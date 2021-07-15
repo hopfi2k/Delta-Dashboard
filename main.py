@@ -1,7 +1,19 @@
-# This is a sample Python script.
+# This is a Python script to fetch data from a Delta Solar Inverter
+# and showing it via Browser
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+from pymodbus.constants import Endian
+from pymodbus.client.sync import ModbusTcpClient
+from pymodbus.payload import BinaryPayloadDecoder
+from twisted.internet.defer import Deferred
+from flask import Flask
+
+# --------------------------------------------------------------------------- #
+# Logging
+# --------------------------------------------------------------------------- #
+import logging
+_logger = logging.getLogger(__name__)
+_logger.setLevel(logging.DEBUG)
+logging.basicConfig()
 
 
 def print_hi(name):
