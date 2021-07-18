@@ -1,17 +1,19 @@
 # Python script to server dashboard data for DELTA Inverters
 # written and (c) 2021 by Andreas Hopfenblatt
 
-import functools
 import json
-from pymodbus.constants import Endian
-from pymodbus.client.sync import ModbusTcpClient
-from pymodbus.payload import BinaryPayloadDecoder
-from twisted.internet.defer import Deferred
+from pymodbus.version import version
+from pymodbus.server.asynchronous import StartTcpServer
+from pymodbus.device import ModbusDeviceIdentification
+from pymodbus.datastore import ModbusSequentialDataBlock
+from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
+from pymodbus.transaction import ModbusRtuFramer, ModbusAsciiFramer
 import os
 import logging
 import time
 import threading
 import sunspec.sunspeclib
+import sunspec.delta_data_structure
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import asyncio
 import websockets
@@ -19,23 +21,25 @@ import random
 
 # define constants
 HTTP_HOST = os.getenv('HOST', '0.0.0.0')
-HTTP_PORT = int(os.getenv('PORT', 8080))  # http port the dashboard will bind to
-INVERTER_ADDR = '192.168.1.1'  # address of the inverter to collct data from
+HTTP_PORT = int(os.getenv('PORT', 8080))    # http port the dashboard will bind to
+INVERTER_ADDR = '192.168.1.1'               # address of the inverter to collct data from
 INVERTER_PORT = '3500'
+RS485 = '/dev/ttyUSB0'                      # USB device of the RS-485 adapter
 
 # --------------------------------------------------------------------------- #
 # Logging
 # --------------------------------------------------------------------------- #
-_logger = logging.getLogger(__name__)
-_logger.setLevel(logging.DEBUG)
-logging.basicConfig()
+FORMAT = ('%(asctime)-15s %(threadName)-15s'
+          ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
+logging.basicConfig(format=FORMAT)
+log = logging.getLogger()
+log.setLevel(logging.DEBUG)
 
 
 #
 # Class that handles reading data from the DELTA Inverter
 #
-class DeltaDataClass(threading.Thread):
-    data = {"Volt": 240, "Amps": 30, "Hz": 50.0}  # dictionary with the inverter data
+class DeltaDataClass(threading.Thread, sunspec.delta_data_structure.DeltaDataStructure):
     new_data = False  # true if new data is available
     timestamp = None  # timestamp of last data update
 
@@ -52,9 +56,15 @@ class DeltaDataClass(threading.Thread):
 
     # private method updating the data
     def __update(self):
-        self.data['Volt'] = random.randrange(100, 250, 1)
-        self.data['Amps'] = random.randrange(1, 32, 1)
-        self.data['Hz'] = round(random.random() * 50, 2)
+        self.data['Phase1_Output']['Voltage'] = random.randrange(2250, 2450, 1)/10
+        self.data['Phase1_Output']['Current'] = random.randrange(1, 32, 1)
+        self.data['Phase1_Output']['Frequency'] = round(random.random() * 50, 2)
+        self.data['Phase2_Output']['Voltage'] = random.randrange(2200, 2460, 1)/10
+        self.data['Phase2_Output']['Current'] = random.randrange(1, 32, 1)
+        self.data['Phase2_Output']['Frequency'] = round(random.random() * 50, 2)
+        self.data['Phase2_Output']['Voltage'] = random.randrange(2250, 2450, 1)/10
+        self.data['Phase2_Output']['Current'] = random.randrange(1, 32, 1)
+        self.data['Phase2_Output']['Frequency'] = round(random.random() * 50, 2)
         self.new_data = True
         self.timestamp = time.time()
 
@@ -96,7 +106,7 @@ class WebServer(threading.Thread):
         threading.Thread.__init__(self)  # call parent constructor
         self.host = host
         self.port = port
-        print('HTTP Server started! ' + 'http://' + self.host + ':' + str(self.port) + '/')
+        print('HTTP Server started! http:' + '//' + self.host + ':' + str(self.port) + '/')
         time.sleep(1)
 
     def run(self):
@@ -128,7 +138,7 @@ class WS(threading.Thread):
     def pushData(self, data):
         for websocket in self.connected.copy():         # loop through all registered clients
             response = websocket.send(data)
-            asyncio.run_coroutine_threadsafe(response, loop)
+            asyncio.run_coroutine_threadsafe(response, ws_loop)
 
     async def handler(self, websocket, path):
         self.connected.add(websocket)                   # register client connection
@@ -149,8 +159,40 @@ class ModBusServer(threading.Thread):
     def __init__(self, deltadata):
         threading.Thread.__init__(self)  # call parent constructor
         self.data = deltadata
-        print('ModBus Server started!')
-        time.sleep(1)
+
+        # ModBus slave context
+        self.store = ModbusSlaveContext(
+            di=ModbusSequentialDataBlock(0, [17]*100),
+            co=ModbusSequentialDataBlock(0, [17]*100),
+            hr=ModbusSequentialDataBlock(0, [17]*100),
+            ir=ModbusSequentialDataBlock(0, [17]*100)
+        )
+
+        self.context = ModbusServerContext(slaves=self.store, single=True)
+
+        # ModBus server identification
+        self.identity = ModbusDeviceIdentification()
+        self.identity.VendorName = 'DeltaModBus'
+        self.identity.ProductCode = 'DMB'
+        self.identity.VendorUrl = 'https://hopfenblatt.com'
+        self.identity.ProductName = 'DELTA Inverter Modbus Server'
+        self.identity.ModelName = 'Modbus Server'
+        self.identity.MajorMinorRevision = version.short()
+
+    def update(self, a):
+        log.debug('updating modbus values')
+        context = a[0]
+        register = 3
+        slave_id = 0x00
+        address = 0x10
+        values = context[slave_id].getValues(register, address, count=5)
+        values = [v +1 for v in values]
+        log.debug('new values: ' + str(values))
+        context[slave_id].setValues(register, address, values)
+
+    def run(self):
+        # start TCP ModBus-Server
+        StartTcpServer(self.context, identity=self.identity, address=("", 5020))
 
 
 #
@@ -172,9 +214,10 @@ try:
     modbus.start()          # start the modbus server
 
     ws_server = websockets.serve(websock.handler, '0.0.0.0', 8000)
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(ws_server)
-    loop.run_forever()
+    ws_loop = asyncio.get_event_loop()
+    ws_loop.run_until_complete(ws_server)
+    ws_loop.run_forever()
+
 except KeyboardInterrupt:
     stopFlag = True
     print('Exiting program...')
