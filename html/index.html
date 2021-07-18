@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>DELTA Inverter Dashboard</title>
+    </head>
+    <body>
+        DASHBOARD
+        <script>
+            let ws = new WebSocket('ws://localhost:8000', 'json'),
+                messages = document.createElement('ul');
+            ws.onmessage = function (event) {
+                let data = JSON.parse(event.data);
+                console.log(data);
+                let messages = document.getElementsByTagName('ul')[0],
+                    message = document.createElement('li'),
+                    content = document.createTextNode(event.data);
+                message.appendChild(content);
+                messages.appendChild(message);
+            };
+            document.body.appendChild(messages);
+        </script>
+    </body>
+</html>
