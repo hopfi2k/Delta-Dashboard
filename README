@@ -1,1 +1,4 @@
+# DELTA Dashboard
 This script pulls data from a DELTA Inverter via RS-485 by the help of a cheap USB-RS-485 dongle and pushes the data to a dashboard via websockets and to a ModBusTCP server.
+
+This script is currently **NOT** functional and is considered as WIP.
