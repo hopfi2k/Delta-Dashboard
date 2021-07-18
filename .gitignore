@@ -1,0 +1,13 @@
+.idea/
+
+# dotenv
+.env
+
+# virtualenv
+.venv
+venv/
+ENV/
+env/
+
+*.egg-info/
+*.egg
