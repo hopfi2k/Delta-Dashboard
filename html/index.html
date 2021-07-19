@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
     <head>
         <!-- Required meta tags -->
         <meta charset="utf-8">
@@ -12,44 +12,400 @@
     </head>
     <body>
         <div class="container-fluid">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="container-fluid">
-                    <a class="navbar-brand" href="/"><strong>DELTA Inverter</strong></a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
-                            <li class="nav-item">
-                                <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <div class="row">
+                <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                    <div class="container-fluid">
+                        <a class="navbar-brand" href="/"><strong>DELTA Inverter</strong></a>
+                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="collapse navbar-collapse" id="navbarNav">
+                            <ul class="navbar-nav me-auto">
+                                <li class="nav-item">
+                                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Settings</a>
+                                </li>
+                            </ul>
+                            <span class="navbar-text">
+                                v1.0.1
+                            </span>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+
+            <!-- strings -->
+            <div class="row mt-3" id="strings">
+                <div class="col-xl-2 col-lg-4 col-sm-6">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header text-center list-group-item-success" id="String_1">
+                            <strong>String 1</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Voltage</div>
+                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Settings</a>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Current</div>
+                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Power</div>
+                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
                             </li>
                         </ul>
-                        <span class="navbar-text">
-                            v1.1
-                        </span>
-                     </div>
+                    </div>
                 </div>
-            </nav>
+                <div class="col-xl-2 col-lg-4 col-sm-6">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header text-center list-group-item-success" id="String_2">
+                            <strong>String 2</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Voltage</div>
+                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Current</div>
+                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Power</div>
+                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-4 col-sm-6">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header text-center list-group-item-success" id="String_3">
+                            <strong>String 3</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Voltage</div>
+                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Current</div>
+                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Power</div>
+                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-4 col-sm-6">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header text-center list-group-item-success" id="String_4">
+                            <strong>String 4</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Voltage</div>
+                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Current</div>
+                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Power</div>
+                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-4 col-sm-6">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header text-center list-group-item-success" id="String_5">
+                            <strong>String 5</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Voltage</div>
+                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Current</div>
+                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Power</div>
+                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-xl-2 col-lg-4 col-sm-6">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header text-center list-group-item-success" id="String_6">
+                            <strong>String 6</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Voltage</div>
+                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Current</div>
+                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Power</div>
+                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div><!-- end strings -->
+
+            <!-- Output -->
+            <div class="row mt-3">
+                <div class="col-md-4 col-12">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header text-center list-group-item-warning" id="Output_1">
+                            <strong>Output 1</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Voltage (L-N)</div>
+                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Current</div>
+                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Power</div>
+                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Frequency</div>
+                                <div class="float-end text-primary">50.00<span class="ps-1 text-body">Hz</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header text-center list-group-item-warning" id="Output_2">
+                            <strong>Output 2</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Voltage (L-N)</div>
+                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Current</div>
+                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Power</div>
+                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Frequency</div>
+                                <div class="float-end text-primary">50.00<span class="ps-1 text-body">Hz</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4 col-12">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header text-center list-group-item-warning" id="Output_3">
+                            <strong>Output 3</strong>
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Voltage (L-N)</div>
+                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Current</div>
+                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Power</div>
+                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                            </li>
+                            <li class="list-group-item clearfix">
+                                <div class="float-start">Frequency</div>
+                                <div class="float-end text-primary">50.00<span class="ps-1 text-body">Hz</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div><!-- end Output -->
+
+            <!-- Extra Information -->
+            <div class="row mt-3">
+                <div class="accordion" id="extraInfo">
+                    <div class="accordion-item">
+                        <span class="accordion-header lh-1" id="headerInfo">
+                            <button class="accordion-button collapsed fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#collapseInfo" aria-expanded="false" aria-controls="collapseInfo">
+                                Extra Information
+                            </button>
+                        </span>
+                        <div id="collapseInfo" class="accordion-collapse collapse" aria-labelledby="headerInfo" data-bs-parent="#extraInfo">
+                            <div class="accordion-body">
+                                <div class="row no-gutters">
+                                    <div class="col-lg-3 col-md-6 col-12 mb-md-3 mb-col-3">
+                                        <div class="card border-dark">
+                                            <div class="card-header bg-light" id="inverter">
+                                                <strong>Inverter</strong>
+                                            </div>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item clearfix">
+                                                    <div class="float-start">DSP FW Version</div>
+                                                    <div class="float-end text-primary">V1.31</div>
+                                                </li>
+                                                <li class="list-group-item clearfix">
+                                                    <div class="float-start">Redundant FW Version</div>
+                                                    <div class="float-end text-primary">V1.11</div>
+                                                </li>
+                                                <li class="list-group-item clearfix">
+                                                    <div class="float-start">Comm. FW Version</div>
+                                                    <div class="float-end text-primary">V1.27</div>
+                                                </li>
+                                                <li class="list-group-item clearfix">
+                                                    <div class="float-start">ARC FW Version</div>
+                                                    <div class="float-end text-primary">V1.15</div>
+                                                </li>
+                                                <li class="list-group-item clearfix">
+                                                    <div class="float-start">Serial Number</div>
+                                                    <div class="float-end text-primary">08X20A04404WH</div>
+                                                </li>
+                                                <li class="list-group-item clearfix">
+                                                    <div class="float-start">Model Name</div>
+                                                    <div class="float-end text-primary">M70A_260</div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-12">
+                                        <div class="card border-dark">
+                                            <div class="card-header bg-light" id="temperature">
+                                                <strong>Temperature</strong>
+                                            </div>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                    <div class="float-start">Ambient (max <span class="text-warning">53<span class="ps-1 text-body">°C</span></span>)</div>
+                                                    <div class="float-end text-primary">36<span class="ps-1 text-body">°C</span></div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div class="float-start">Boost-1 (max <span class="text-warning">57<span class="ps-1 text-body">°C</span></span>)</div>
+                                                    <div class="float-end text-primary">53<span class="ps-1 text-body">°C</span></div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div class="float-start">Boost-2 (max <span class="text-warning">0<span class="ps-1 text-body">°C</span></span>)</div>
+                                                    <div class="float-end text-primary">0<span class="ps-1 text-body">°C</span></div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div class="float-start">Inverter-S (max <span class="text-warning">60<span class="ps-1 text-body">°C</span></span>)</div>
+                                                    <div class="float-end text-primary">52<span class="ps-1 text-body">°C</span></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-12">
+                                        <div class="card border-dark">
+                                            <div class="card-header bg-light" id="energy">
+                                                <strong>Energy</strong>
+                                            </div>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                    <div class="float-start">Today</div>
+                                                    <div class="float-end text-primary">166.00<span class="text-body ps-1">kWh</span></div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div class="float-start">Today runtime</div>
+                                                    <div class="float-end text-primary">09:37:01<span class="text-body ps-1">h</span></div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div class="float-start">Lifetime</div>
+                                                    <div class="float-end text-primary">394.50<span class=" text-body ps-1">kWh</span></div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div class="float-start">Lifetime runtime</div>
+                                                    <div class="float-end text-primary">32:04:04<span class="text-body ps-1">h</span></div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-md-6 col-12">
+                                        <div class="card border-dark">
+                                            <div class="card-header bg-light" id="bus">
+                                                <strong>BUS</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- end extra information -->
+
+            <!-- event window -->
+            <div class="row mt-3" id="events">
+                <div class="col-12">
+                    <div class="card border-dark mb-3">
+                        <div class="card-header bg-light">
+                            <strong>Event-Log</strong>
+                        </div>
+                        <div data-bs-spy="scroll" data-bs-offset="0" tabindex="0" style="height: 180px;">
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-1">00</div>
+                                        <div class="col-2">2021/07/14 11:32:51</div>
+                                        <div class="col-9">E02- AC Frequency Low!</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- end event window -->
+
         </div><!-- end container-fluid -->
 
         <!-- Bootstrap JavaScript -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
         <script>
+            function dataparser(obj) {
+                for (let key in obj) {
+                    if (typeof obj[key] == "object" && obj[key] !== null)
+                        dataparser(obj[key]);
+                    else {
+                        // final element
+                        console.log(key + ' - ' + obj[key])
+                    }
+                }
+            }
             let ws = new WebSocket('ws://localhost:8000', 'json'),
                 messages = document.createElement('ul');
             ws.onmessage = function (event) {
                 let data = JSON.parse(event.data);
                 console.log(data);
-                let messages = document.getElementsByTagName('ul')[0],
-                    message = document.createElement('li'),
+                dataparser(data);
+                /*
+                let messages = document.getElementById('log'),
+                    message = document.createElement('span'),
                     content = document.createTextNode(event.data);
                 message.appendChild(content);
                 messages.appendChild(message);
+                */
             };
-            document.body.appendChild(messages);
+            // document.body.appendChild(messages);
         </script>
     </body>
 </html>
