@@ -25,9 +25,7 @@ import random
 # define constants
 HTTP_HOST = socket.getfqdn()                # retreive the host name
 HTTP_PORT = int(os.getenv('PORT', 8080))    # http port the dashboard will bind to
-INVERTER_ADDR = '192.168.1.1'               # address of the inverter to collct data from
-INVERTER_PORT = '3500'
-RS485 = '/dev/ttyUSB0'                      # USB device of the RS-485 adapter
+RS485_PORT = '/dev/ttyUSB0'                      # USB device of the RS-485 adapter (inverter)
 RS485_READ_INTERVAL = 1                     # read values every second
 UNIT = 0x00                                 # unit ID of the Sunspec slave, default
 
@@ -48,10 +46,9 @@ class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataS
     new_data = False  # true if new data is available
     timestamp = None  # timestamp of last data update
 
-    def __init__(self, delta_ip, delta_port):
+    def __init__(self, rs485_port):
         threading.Thread.__init__(self)  # call parent constructor
-        self.delta_ip = delta_ip
-        self.delta_port = delta_port
+        self.rs485port = rs485_port
         print('Delta Inverter Data Reader Server started. Polling data via RS-485!')
         time.sleep(1)
 
@@ -111,12 +108,12 @@ class WebServerClass(threading.Thread):
         threading.Thread.__init__(self)  # call parent constructor
         self.host = host
         self.port = port
-        print('HTTP Server started! http:' + '//' + self.host + ':' + str(self.port) + '/')
+        print('HTTP Server started. Please open http:' + '//' + self.host + ':' + str(self.port) + ' in your browser.')
         time.sleep(1)
 
     def run(self):
         server_class = HTTPServer
-        httpd = server_class((self.host, self.port), RequestHandler)
+        httpd = server_class(('0.0.0.0', self.port), RequestHandler)
         httpd.serve_forever()
 
 
@@ -206,7 +203,7 @@ class ModBusServer(threading.Thread):
 # ------------------------------------------------------------------
 #
 # create objects from classes
-inverterdata = RS485ReaderClass(INVERTER_ADDR, INVERTER_PORT)
+inverterdata = RS485ReaderClass(RS485_PORT)
 webpage = WebServerClass(HTTP_HOST, HTTP_PORT)
 websock = WS(inverterdata)
 modbus = ModBusServer(inverterdata)
@@ -218,7 +215,7 @@ try:
     websock.start()         # start the websocket pusher thread
     modbus.start()          # start the modbus server
 
-    ws_server = websockets.serve(websock.handler, '0.0.0.0', 8000)
+    ws_server = websockets.serve(websock.handler, HTTP_HOST, 8000)
     ws_loop = asyncio.get_event_loop()
     ws_loop.run_until_complete(ws_server)
     ws_loop.run_forever()
