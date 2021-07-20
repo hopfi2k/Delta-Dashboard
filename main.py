@@ -23,7 +23,8 @@ import random
 
 
 # define constants
-HTTP_HOST = socket.getfqdn()                # retreive the host name
+HTTP_HOST_IP = socket.gethostbyname_ex(socket.gethostname())[-1][0]               # retreive the host name
+
 HTTP_PORT = int(os.getenv('PORT', 8080))    # http port the dashboard will bind to
 RS485_PORT = '/dev/ttyUSB0'                      # USB device of the RS-485 adapter (inverter)
 RS485_READ_INTERVAL = 1                     # read values every second
@@ -204,7 +205,7 @@ class ModBusServer(threading.Thread):
 #
 # create objects from classes
 inverterdata = RS485ReaderClass(RS485_PORT)
-webpage = WebServerClass(HTTP_HOST, HTTP_PORT)
+webpage = WebServerClass(HTTP_HOST_IP, HTTP_PORT)
 websock = WS(inverterdata)
 modbus = ModBusServer(inverterdata)
 
@@ -215,7 +216,7 @@ try:
     websock.start()         # start the websocket pusher thread
     modbus.start()          # start the modbus server
 
-    ws_server = websockets.serve(websock.handler, HTTP_HOST, 8000)
+    ws_server = websockets.serve(websock.handler, HTTP_HOST_IP, 8000)
     ws_loop = asyncio.get_event_loop()
     ws_loop.run_until_complete(ws_server)
     ws_loop.run_forever()
