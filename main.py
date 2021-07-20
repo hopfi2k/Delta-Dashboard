@@ -23,10 +23,10 @@ import random
 
 
 # define constants
-HTTP_HOST_IP = socket.gethostbyname_ex(socket.gethostname())[-1][0]               # retreive the host name
-
+# HTTP_HOST_IP = socket.gethostbyname_ex(socket.gethostname())[-1][0]               # retreive the host name
+HTTP_HOST_IP = (([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] if not ip.startswith("127.")] or [[(s.connect(("8.8.8.8", 53)), s.getsockname()[0], s.close()) for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) + ["no IP found"])[0]
 HTTP_PORT = int(os.getenv('PORT', 8080))    # http port the dashboard will bind to
-RS485_PORT = '/dev/ttyUSB0'                      # USB device of the RS-485 adapter (inverter)
+RS485_PORT = '/dev/ttyUSB0'                 # USB device of the RS-485 adapter (inverter)
 RS485_READ_INTERVAL = 1                     # read values every second
 UNIT = 0x00                                 # unit ID of the Sunspec slave, default
 
