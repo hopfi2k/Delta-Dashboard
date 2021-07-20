@@ -9,6 +9,31 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
         <title>DELTA Inverter Dashboard</title>
+
+        <style>
+            .add-volt::after, .add-amp::after, .add-watt::after, .add-temp::after, .add-hz::after, .add-kwh::after {
+                color: #111111;
+                margin-left: 0.2rem;
+            }
+            .add-volt::after {
+                content: "V";
+            }
+            .add-amp::after {
+                content: "A";
+            }
+            .add-watt::after {
+                content: "W";
+            }
+            .add-temp::after {
+                content: "°C";
+            }
+            .add-hz::after {
+                content: "Hz";
+            }
+            .add-kwh::after {
+                content: "kWh";
+            }
+        </style>
     </head>
     <body>
         <div class="container-fluid">
@@ -44,17 +69,17 @@
                             <strong>String 1</strong>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Voltage</div>
-                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                                <div class="float-end text-primary add-volt" id="String_1_Voltage"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Current</div>
-                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                                <div class="float-end text-primary add-amp" id="String_1_Current"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Power</div>
-                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                                <div class="float-end text-primary add-watt" id="String_1_Power"></div>
                             </li>
                         </ul>
                     </div>
@@ -65,17 +90,17 @@
                             <strong>String 2</strong>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Voltage</div>
-                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                                <div class="float-end text-primary add-volt" id="String_2_Voltage"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Current</div>
-                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                                <div class="float-end text-primary add-amp" id="String_2_Current"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Power</div>
-                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                                <div class="float-end text-primary add-watt" id="String_2_Power"></div>
                             </li>
                         </ul>
                     </div>
@@ -86,17 +111,17 @@
                             <strong>String 3</strong>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Voltage</div>
-                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                                <div class="float-end text-primary add-volt" id="String_3_Voltage"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Current</div>
-                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                                <div class="float-end text-primary add-amp" id="String_3_Current"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Power</div>
-                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                                <div class="float-end text-primary add-watt" id="String_3_Power"></div>
                             </li>
                         </ul>
                     </div>
@@ -107,17 +132,17 @@
                             <strong>String 4</strong>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Voltage</div>
-                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                                <div class="float-end text-primary add-volt" id="String_4_Voltage"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Current</div>
-                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                                <div class="float-end text-primary add-amp" id="String_4_Current"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Power</div>
-                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                                <div class="float-end text-primary add-watt" id="String_4_Power"></div>
                             </li>
                         </ul>
                     </div>
@@ -128,17 +153,17 @@
                             <strong>String 5</strong>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Voltage</div>
-                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                                <div class="float-end text-primary add-volt" id="String_5_Voltage"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Current</div>
-                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                                <div class="float-end text-primary add-amp" id="String_5_Current"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Power</div>
-                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                                <div class="float-end text-primary add-watt" id="String_5_Power"></div>
                             </li>
                         </ul>
                     </div>
@@ -149,17 +174,17 @@
                             <strong>String 6</strong>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Voltage</div>
-                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                                <div class="float-end text-primary add-volt" id="String_6_Voltage"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Current</div>
-                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                                <div class="float-end text-primary add-amp" id="String_6_Current"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Power</div>
-                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                                <div class="float-end text-primary add-watt" id="String_6_Power"></div>
                             </li>
                         </ul>
                     </div>
@@ -174,21 +199,21 @@
                             <strong>Output 1</strong>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Voltage (L-N)</div>
-                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                                <div class="float-end text-primary add-volt" id="Phase1_Output_Voltage"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Current</div>
-                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                                <div class="float-end text-primary add-amp" id="Phase1_Output_Current"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Power</div>
-                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                                <div class="float-end text-primary add-watt" id="Phase1_Output_Power"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Frequency</div>
-                                <div class="float-end text-primary">50.00<span class="ps-1 text-body">Hz</span></div>
+                                <div class="float-end text-primary add-hz" id="Phase1_Output_Frequency"></div>
                             </li>
                         </ul>
                     </div>
@@ -199,21 +224,21 @@
                             <strong>Output 2</strong>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Voltage (L-N)</div>
-                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                                <div class="float-end text-primary add-volt" id="Phase2_Output_Voltage"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Current</div>
-                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                                <div class="float-end text-primary add-amp" id="Phase2_Output_Current"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Power</div>
-                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                                <div class="float-end text-primary add-watt" id="Phase2_Output_Power"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Frequency</div>
-                                <div class="float-end text-primary">50.00<span class="ps-1 text-body">Hz</span></div>
+                                <div class="float-end text-primary add-hz" id="Phase2_Output_Frequency"></div>
                             </li>
                         </ul>
                     </div>
@@ -224,21 +249,21 @@
                             <strong>Output 3</strong>
                         </div>
                         <ul class="list-group list-group-flush">
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Voltage (L-N)</div>
-                                <div class="float-end text-primary">230<span class="ps-1 text-body">V</span></div>
+                                <div class="float-end text-primary add-volt" id="Phase3_Output_Voltage"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Current</div>
-                                <div class="float-end text-primary">4.35<span class="ps-1 text-body">A</span></div>
+                                <div class="float-end text-primary add-amp" id="Phase3_Output_Current"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Power</div>
-                                <div class="float-end text-primary">2930<span class="ps-1 text-body">W</span></div>
+                                <div class="float-end text-primary add-watt" id="Phase3_Output_Power"></div>
                             </li>
-                            <li class="list-group-item clearfix">
+                            <li class="list-group-item">
                                 <div class="float-start">Frequency</div>
-                                <div class="float-end text-primary">50.00<span class="ps-1 text-body">Hz</span></div>
+                                <div class="float-end text-primary add-hz" id="Phase3_Output_Frequency"></div>
                             </li>
                         </ul>
                     </div>
@@ -263,27 +288,27 @@
                                                 <strong>Inverter</strong>
                                             </div>
                                             <ul class="list-group list-group-flush">
-                                                <li class="list-group-item clearfix">
+                                                <li class="list-group-item">
                                                     <div class="float-start">DSP FW Version</div>
                                                     <div class="float-end text-primary">V1.31</div>
                                                 </li>
-                                                <li class="list-group-item clearfix">
+                                                <li class="list-group-item">
                                                     <div class="float-start">Redundant FW Version</div>
                                                     <div class="float-end text-primary">V1.11</div>
                                                 </li>
-                                                <li class="list-group-item clearfix">
+                                                <li class="list-group-item">
                                                     <div class="float-start">Comm. FW Version</div>
                                                     <div class="float-end text-primary">V1.27</div>
                                                 </li>
-                                                <li class="list-group-item clearfix">
+                                                <li class="list-group-item">
                                                     <div class="float-start">ARC FW Version</div>
                                                     <div class="float-end text-primary">V1.15</div>
                                                 </li>
-                                                <li class="list-group-item clearfix">
+                                                <li class="list-group-item">
                                                     <div class="float-start">Serial Number</div>
                                                     <div class="float-end text-primary">08X20A04404WH</div>
                                                 </li>
-                                                <li class="list-group-item clearfix">
+                                                <li class="list-group-item">
                                                     <div class="float-start">Model Name</div>
                                                     <div class="float-end text-primary">M70A_260</div>
                                                 </li>
@@ -297,20 +322,20 @@
                                             </div>
                                             <ul class="list-group list-group-flush">
                                                 <li class="list-group-item">
-                                                    <div class="float-start">Ambient (max <span class="text-warning">53<span class="ps-1 text-body">°C</span></span>)</div>
-                                                    <div class="float-end text-primary">36<span class="ps-1 text-body">°C</span></div>
+                                                    <div class="float-start">Ambient (max <span class="text-warning add-temp">53</span>)</div>
+                                                    <div class="float-end text-primary add-temp">36</div>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <div class="float-start">Boost-1 (max <span class="text-warning">57<span class="ps-1 text-body">°C</span></span>)</div>
-                                                    <div class="float-end text-primary">53<span class="ps-1 text-body">°C</span></div>
+                                                    <div class="float-start">Boost-1 (max <span class="text-warning add-temp">57</span>)</div>
+                                                    <div class="float-end text-primary add-temp">5</div>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <div class="float-start">Boost-2 (max <span class="text-warning">0<span class="ps-1 text-body">°C</span></span>)</div>
-                                                    <div class="float-end text-primary">0<span class="ps-1 text-body">°C</span></div>
+                                                    <div class="float-start">Boost-2 (max <span class="text-warning add-temp">0</span>)</div>
+                                                    <div class="float-end text-primary add-temp">0</div>
                                                 </li>
                                                 <li class="list-group-item">
-                                                    <div class="float-start">Inverter-S (max <span class="text-warning">60<span class="ps-1 text-body">°C</span></span>)</div>
-                                                    <div class="float-end text-primary">52<span class="ps-1 text-body">°C</span></div>
+                                                    <div class="float-start">Inverter-S (max <span class="text-warning add-temp">60</span>)</div>
+                                                    <div class="float-end text-primary add-temp">52</div>
                                                 </li>
                                             </ul>
                                         </div>
@@ -343,8 +368,18 @@
                                     <div class="col-lg-3 col-md-6 col-12">
                                         <div class="card border-dark">
                                             <div class="card-header bg-light" id="bus">
-                                                <strong>BUS</strong>
+                                                <strong>BUS-Voltage</strong>
                                             </div>
+                                            <ul class="list-group list-group-flush">
+                                                <li class="list-group-item">
+                                                    <div class="float-start">PBus</div>
+                                                    <div class="float-end text-primary add-volt">368.7</div>
+                                                </li>
+                                                <li class="list-group-item">
+                                                    <div class="float-start">NBus</div>
+                                                    <div class="float-end text-primary add-volt">369.6</div>
+                                                </li>
+                                            </ul>
                                         </div>
                                     </div>
                                 </div>
@@ -357,11 +392,11 @@
             <!-- event window -->
             <div class="row mt-3" id="events">
                 <div class="col-12">
-                    <div class="card border-dark mb-3">
+                    <div class="card mb-3">
                         <div class="card-header bg-light">
                             <strong>Event-Log</strong>
                         </div>
-                        <div data-bs-spy="scroll" data-bs-offset="0" tabindex="0" style="height: 180px;">
+                        <div tabindex="0" style="height: 180px;">
                             <ul class="list-group list-group-flush">
                                 <li class="list-group-item">
                                     <div class="row">
@@ -383,19 +418,35 @@
         <script>
             function dataparser(obj) {
                 for (let key in obj) {
-                    if (typeof obj[key] == "object" && obj[key] !== null)
+                    if (typeof obj[key] === "object" && obj[key] !== null)
                         dataparser(obj[key]);
                     else {
-                        // final element
-                        console.log(key + ' - ' + obj[key])
+                        // update the values of the ID
+                        if (document.getElementById(key)) {
+                            let value = obj[key];
+
+                            // handle number values
+                            if (typeof value === "number") {
+                                if (value > 1000) {
+                                    value.toFixed(0);
+                                }
+                                else if (value > 100) {
+                                    value.toFixed(1);
+                                }
+                                else {
+                                    value.toFixed(2);
+                                }
+                            }
+                            // console.log(typeof value + ": " + value);
+                            document.getElementById(key).textContent = value;
+                        }
                     }
                 }
             }
-            let ws = new WebSocket('ws://localhost:8000', 'json'),
-                messages = document.createElement('ul');
+            let ws = new WebSocket('ws://localhost:8000', 'json');
+
             ws.onmessage = function (event) {
                 let data = JSON.parse(event.data);
-                console.log(data);
                 dataparser(data);
                 /*
                 let messages = document.getElementById('log'),
@@ -405,7 +456,6 @@
                 messages.appendChild(message);
                 */
             };
-            // document.body.appendChild(messages);
         </script>
     </body>
 </html>
