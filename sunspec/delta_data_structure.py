@@ -128,7 +128,7 @@ class DeltaDataStructure:
             "PBus": 368.7,
             "NBus": 369.6,
         },
-        "Errors": {
+        "Events": {
             "Time": "2021/07/14 11:32:51",
             "Code": "E02- AC Freq Low",
         }
