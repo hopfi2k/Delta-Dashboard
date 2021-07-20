@@ -3,3 +3,23 @@
 This script pulls data from a DELTA Inverter via RS-485 by the help of a cheap USB-RS-485 dongle and pushes the data to a dashboard via websockets and to a ModBusTCP server.
 
 This script is currently **NOT** functional and is considered as WIP.
+
+
+### Installation:
+
+Make sure the host has `git` and `pip` areavailable. If not, please install via `sudo apt install git python3-pip`. 
+
+Now clone the repository:
+```
+git clone https://github.com/hopfi2k/Delta-Dashboard
+cd Delta-Dashboard
+```
+Next install the necessary Python packages:
+```
+pip3 install -r requirements.txt
+```
+To run the dashboard:
+```
+python3 ./main.py
+```
+To show the Dashboard open a browser and enter the URL that was shown (usually something like `http://<IP>:8080`).
