@@ -33,7 +33,7 @@ FORMAT = ('%(asctime)-15s %(threadName)-15s'
           ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
 logging.basicConfig(format=FORMAT)
 log = logging.getLogger()
-log.setLevel(logging.DEBUG)
+log.setLevel(logging.INFO)
 
 
 #
@@ -56,15 +56,15 @@ class DeltaDataClass(threading.Thread, sunspec.delta_data_structure.DeltaDataStr
 
     # private method updating the data
     def __update(self):
-        self.data['Phase1_Output']['Voltage'] = random.randrange(2250, 2450, 1)/10
-        self.data['Phase1_Output']['Current'] = random.randrange(1, 32, 1)
-        self.data['Phase1_Output']['Frequency'] = round(random.random() * 50, 2)
-        self.data['Phase2_Output']['Voltage'] = random.randrange(2200, 2460, 1)/10
-        self.data['Phase2_Output']['Current'] = random.randrange(1, 32, 1)
-        self.data['Phase2_Output']['Frequency'] = round(random.random() * 50, 2)
-        self.data['Phase2_Output']['Voltage'] = random.randrange(2250, 2450, 1)/10
-        self.data['Phase2_Output']['Current'] = random.randrange(1, 32, 1)
-        self.data['Phase2_Output']['Frequency'] = round(random.random() * 50, 2)
+        self.data['Phase1_Output_Voltage'] = float(random.randrange(2250, 2450, 1)/10)
+        self.data['Phase1_Output_Current'] = float(random.randrange(10, 320, 1)/10)
+        self.data['Phase1_Output_Frequency'] = float(round(random.random() * 50, 2))
+        self.data['Phase2_Output_Voltage'] = float(random.randrange(2200, 2460, 1)/10)
+        self.data['Phase2_Output_Current'] = float(random.randrange(1, 32, 1))
+        self.data['Phase2_Output_Frequency'] = float(round(random.random() * 50, 2))
+        self.data['Phase3_Output_Voltage'] = float(random.randrange(2250, 2450, 1)/10)
+        self.data['Phase3_Output_Current'] = float(random.randrange(1, 32, 1))
+        self.data['Phase3_Output_Frequency'] = float(round(random.random() * 50, 2))
         self.new_data = True
         self.timestamp = time.time()
 
@@ -76,6 +76,7 @@ class DeltaDataClass(threading.Thread, sunspec.delta_data_structure.DeltaDataStr
     # public method that returns the data as a JSON-Object
     def asJSON(self):
         self.new_data = False
+        print(json.dumps(self.data))
         return json.dumps(self.data)
 
 
