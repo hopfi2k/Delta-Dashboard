@@ -89,7 +89,6 @@ class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataS
     # public method that returns the data as a JSON-Object
     def asJSON(self):
         self.new_data = False
-        print(json.dumps(self.data))
         return json.dumps(self.data)
 
 
