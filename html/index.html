@@ -443,7 +443,7 @@
                     }
                 }
             }
-            let ws = new WebSocket('ws://localhost:8000', 'json');
+            let ws = new WebSocket('ws://' + window.location.origin, 'json');
 
             ws.onmessage = function (event) {
                 let data = JSON.parse(event.data);
