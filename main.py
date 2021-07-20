@@ -15,9 +15,20 @@ import threading
 import sunspec.sunspeclib
 import sunspec.delta_data_structure
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import asyncio
 import websockets
 import random
+
+from pymodbus.compat import IS_PYTHON3, PYTHON_VERSION
+if IS_PYTHON3 and PYTHON_VERSION >= (3, 6):
+    import asyncio
+    from serial_asyncio import create_serial_connection
+    from pymodbus.client.asynchronous.async_io import ModbusClientProtocol
+    from pymodbus.transaction import ModbusAsciiFramer, ModbusRtuFramer
+    from pymodbus.factory import ClientDecoder
+else:
+    import sys
+    print("This software need to be run on Python 3.6 or newer! Aborting...")
+    sys.exit(1)
 
 # define constants
 HTTP_HOST = os.getenv('HOST', '0.0.0.0')
@@ -25,6 +36,8 @@ HTTP_PORT = int(os.getenv('PORT', 8080))    # http port the dashboard will bind 
 INVERTER_ADDR = '192.168.1.1'               # address of the inverter to collct data from
 INVERTER_PORT = '3500'
 RS485 = '/dev/ttyUSB0'                      # USB device of the RS-485 adapter
+RS485_READ_INTERVAL = 1                     # read values every second
+UNIT = 0x00                                 # unit ID of the Sunspec slave, default
 
 # --------------------------------------------------------------------------- #
 # Logging
@@ -33,13 +46,13 @@ FORMAT = ('%(asctime)-15s %(threadName)-15s'
           ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
 logging.basicConfig(format=FORMAT)
 log = logging.getLogger()
-log.setLevel(logging.INFO)
+log.setLevel(logging.DEBUG)             # set to .INFO for production
 
 
 #
 # Class that handles reading data from the DELTA Inverter
 #
-class DeltaDataClass(threading.Thread, sunspec.delta_data_structure.DeltaDataStructure):
+class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataStructure):
     new_data = False  # true if new data is available
     timestamp = None  # timestamp of last data update
 
@@ -70,8 +83,8 @@ class DeltaDataClass(threading.Thread, sunspec.delta_data_structure.DeltaDataStr
 
     def run(self):
         while True:
-            self.__update()
-            time.sleep(1)
+            self.__update()                     # read values via RS485
+            time.sleep(RS485_READ_INTERVAL)     # wait N seconds until next read
 
     # public method that returns the data as a JSON-Object
     def asJSON(self):
@@ -101,7 +114,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 # Class as for a simple webserver to serve the static webpage
 # for the dashboard
 #
-class WebServer(threading.Thread):
+class WebServerClass(threading.Thread):
 
     def __init__(self, host, port):
         threading.Thread.__init__(self)  # call parent constructor
@@ -187,7 +200,7 @@ class ModBusServer(threading.Thread):
         slave_id = 0x00
         address = 0x10
         values = context[slave_id].getValues(register, address, count=5)
-        values = [v +1 for v in values]
+        values = [v + 1 for v in values]
         log.debug('new values: ' + str(values))
         context[slave_id].setValues(register, address, values)
 
@@ -202,8 +215,8 @@ class ModBusServer(threading.Thread):
 # ------------------------------------------------------------------
 #
 # create objects from classes
-inverterdata = DeltaDataClass(INVERTER_ADDR, INVERTER_PORT)
-webpage = WebServer(HTTP_HOST, HTTP_PORT)
+inverterdata = RS485ReaderClass(INVERTER_ADDR, INVERTER_PORT)
+webpage = WebServerClass(HTTP_HOST, HTTP_PORT)
 websock = WS(inverterdata)
 modbus = ModBusServer(inverterdata)
 
