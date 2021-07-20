@@ -2,6 +2,12 @@
 # handles data reading/writing according to the SUNSPEC protocoll
 # written by Andreas Hopfenblatt
 
+from pymodbus.constants import Endian
+from pymodbus.client.sync import ModbusTcpClient
+from pymodbus.payload import BinaryPayloadDecoder
+from twisted.internet.defer import Deferred
+
+
 # --------------------------------------------------------------------------- #
 # Sunspec Common Constants
 # --------------------------------------------------------------------------- #
@@ -76,7 +82,6 @@ class SunspecModel(object):
     Inclinometer = 304
     Location = 305
     ReferencePoint = 306
-    BaseMeteorological = 307
     MiniMeteorological = 308
 
     # ---------------------------------------------
@@ -131,3 +136,41 @@ class SunspecOffsets(object):
     CommonBlock = 40000
     CommonBlockLength = 69
     AlternateCommonBlock = 50000
+
+
+#
+# Sunspec Decorder Class for decoding Strings
+#
+class SunspecDecoder(BinaryPayloadDecoder):
+
+    def __init__(self, payload, byteorder):
+        byteorder = Endian.Big
+        BinaryPayloadDecoder.__init__(self, payload, byteorder)     # call parent constructor
+
+    def decode_string(self, size=1):
+        self._pointer += size
+        string = self._payload[self._pointer - size:self._pointer]
+        return string.split(SunspecDefaultValue.String[0])
+
+
+#
+# Sunspec Client Class
+#
+class SunspecClient(object):
+
+    def __init__(self, client):
+        self.client = client
+        self.offset = SunspecOffsets.CommonBlock
+
+    def initialize(self):
+        decoder = self.get_device_block(self.offset, 2)
+        if decoder.decode_32bit_uint() == SunspecIdentifier.Sunspec:
+            return True
+        self.offset = SunspecOffsets.AlternateCommonBlock
+        decoder = self.get_device_block(self.offset, 2)
+        return decoder.decode_32bit_uint() == SunspecIdentifier.Sunspec
+
+    def get_device_block(self, offset, size):
+        response = self.client.read_holding_registers(offset, size + 2)
+        return SunspecDecoder.fromRegisters(response.registers)
+
