@@ -2,12 +2,15 @@
 # written and (c) 2021 by Andreas Hopfenblatt
 
 import json
+import socket
+
 from pymodbus.version import version
 from pymodbus.server.asynchronous import StartTcpServer
 from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.datastore import ModbusSequentialDataBlock
 from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 from pymodbus.transaction import ModbusRtuFramer, ModbusAsciiFramer
+import asyncio
 import os
 import logging
 import time
@@ -18,20 +21,9 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import websockets
 import random
 
-from pymodbus.compat import IS_PYTHON3, PYTHON_VERSION
-if IS_PYTHON3 and PYTHON_VERSION >= (3, 6):
-    import asyncio
-    from serial_asyncio import create_serial_connection
-    from pymodbus.client.asynchronous.async_io import ModbusClientProtocol
-    from pymodbus.transaction import ModbusAsciiFramer, ModbusRtuFramer
-    from pymodbus.factory import ClientDecoder
-else:
-    import sys
-    print("This software need to be run on Python 3.6 or newer! Aborting...")
-    sys.exit(1)
 
 # define constants
-HTTP_HOST = os.getenv('HOST', '0.0.0.0')
+HTTP_HOST = socket.getfqdn()                # retreive the host name
 HTTP_PORT = int(os.getenv('PORT', 8080))    # http port the dashboard will bind to
 INVERTER_ADDR = '192.168.1.1'               # address of the inverter to collct data from
 INVERTER_PORT = '3500'
