@@ -5,16 +5,16 @@ import json
 import socket
 import sys
 
+import pymodbus
+from pymodbus.exceptions import ConnectionException
 from pymodbus.version import version
 from pymodbus.server.asynchronous import StartTcpServer
 from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.datastore import ModbusSequentialDataBlock
 from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
-from pymodbus.diag_message import *
-from pymodbus.file_message import *
-from pymodbus.other_message import *
 from pymodbus.mei_message import *
+from pymodbus.client.sync import ModbusTcpClient
 import asyncio
 import os
 import logging
@@ -37,9 +37,10 @@ HTTP_HOST_IP = (([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] 
                    for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) + ["no IP found"])[0]
 
 HTTP_PORT = int(os.getenv('PORT', 8080))    # http port the dashboard will bind to
-RS485_DEVICE = '/dev/ttyUSB0'                 # USB device of the RS-485 adapter (inverter)
+CONN_TYPE = 'TCP'                           # TCP = ModBusTCP, RTU = serial
+RS485_DEVICE = '/dev/ttyUSB0'               # USB device of the RS-485 adapter (inverter)
 RS485_READ_INTERVAL = 1                     # read values every second
-UNIT = 0x00                                 # unit ID of the Sunspec slave, default
+UNIT_ID = 0x71                              # unit ID of the Sunspec slave, default
 
 # --------------------------------------------------------------------------- #
 # Logging
@@ -54,21 +55,38 @@ log.setLevel(logging.INFO)             # set to .INFO for production
 #
 # Class that handles reading data from the DELTA Inverter
 #
-class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataStructure):
+class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataStructure,
+                       sunspec.sunspeclib.SunspecClient):
     new_data = False  # true if new data is available
     timestamp = None  # timestamp of last data update
 
     # Class constructor
     def __init__(self, rs485_port):
         threading.Thread.__init__(self)  # call parent constructor
-        self.client = ModbusClient(method='rtu', port=rs485_port, timeout=1, baudrate=9600)   # serial rs 485 connection
-        self.client.connect()   # establish connection
+        if CONN_TYPE == 'TCP':
+            # TCP/IP connection
+            self.client = ModbusTcpClient(host='192.168.1.170', port=1502)
+            log.info('Connecting to Inverter via TCP/IP')
+        elif CONN_TYPE == 'RTU':
+            # serial rs 485 connection
+            self.client = ModbusClient(method='rtu', port=rs485_port, timeout=1, baudrate=9600)
+            log.info('Connecting to Inverter via Serial RTU')
+        else:
+            log.debug('Can\'t connect to inverter - please specify connection type')
+
+        # finally connect to the device
+        # try:
+        #    self.client.connect()   # establish connection
+        # except pymodbus.exceptions.ConnectionException as e:
+        #    log.debug('Failed to establish a connection to the device: ' + str(e))
+
+        # sunspec.sunspeclib.SunspecClient.__init__(self, self.client)
 
         # retreive basic informations from the connected client (Inverter)
-        log.debug('Running Device Information Request')
-        request = ReadDeviceInformationRequest(unit=UNIT)
-        result = self.client.execute(request)
-        log.debug(result)
+        # log.debug('Running Device Information Request')
+        # request = ReadDeviceInformationRequest(unit=UNIT_ID)
+        # result = self.client.execute(request)
+        # log.debug(result)
 
         print('Delta Inverter Data Reader Server started. Polling data via RS-485!')
         time.sleep(1)
@@ -85,7 +103,7 @@ class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataS
     def __update(self):
 
         # read the coils from the the inverter according to the SUNSPEC protocol
-        result = self.client.read_coils(2, 16, unit=UNIT)
+        # result = self.client.read_coils(2, 16, unit=UNIT_ID)
 
         self.data['Phase1_Output_Voltage'] = float(random.randrange(2250, 2450, 1)/10)
         self.data['Phase1_Output_Current'] = float(random.randrange(10, 320, 1)/10)
