@@ -13,15 +13,14 @@ from pymodbus.device import ModbusDeviceIdentification
 from pymodbus.datastore import ModbusSequentialDataBlock
 from pymodbus.datastore import ModbusSlaveContext, ModbusServerContext
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
-from pymodbus.mei_message import *
 from pymodbus.client.sync import ModbusTcpClient
 import asyncio
 import os
 import logging
 import time
 import threading
-import sunspec.sunspeclib
-import sunspec.delta_data_structure
+# import sunspec.sunspeclib
+# import sunspec.delta_data_structure
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import websockets
 import random
@@ -36,11 +35,11 @@ HTTP_HOST_IP = (([ip for ip in socket.gethostbyname_ex(socket.gethostname())[2] 
                  [[(s.connect(("8.8.8.8", 53)), s.getsockname()[0], s.close())
                    for s in [socket.socket(socket.AF_INET, socket.SOCK_DGRAM)]][0][1]]) + ["no IP found"])[0]
 
-HTTP_PORT = int(os.getenv('PORT', 8080))    # http port the dashboard will bind to
-CONN_TYPE = 'TCP'                           # TCP = ModBusTCP, RTU = serial
-RS485_DEVICE = '/dev/ttyUSB0'               # USB device of the RS-485 adapter (inverter)
-RS485_READ_INTERVAL = 1                     # read values every second
-UNIT_ID = 0x71                              # unit ID of the Sunspec slave, default
+HTTP_PORT = int(os.getenv('PORT', 8080))  # http port the dashboard will bind to
+CONN_TYPE = 'RTU'               # TCP = ModBusTCP, RTU = serial
+RS485_DEVICE = '/dev/ttyUSB0'   # USB device of the RS-485 adapter (inverter)
+RS485_READ_INTERVAL = 1         # read values every second
+UNIT_ID = 1                     # unit ID of the Sunspec slave, default
 
 # --------------------------------------------------------------------------- #
 # Logging
@@ -49,14 +48,13 @@ FORMAT = ('%(asctime)-15s %(threadName)-15s'
           ' %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s')
 logging.basicConfig(format=FORMAT)
 log = logging.getLogger()
-log.setLevel(logging.INFO)             # set to .INFO for production
+log.setLevel(logging.INFO)  # set to .INFO for production
 
 
 #
 # Class that handles reading data from the DELTA Inverter
 #
-class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataStructure,
-                       sunspec.sunspeclib.SunspecClient):
+class RS485ReaderClass(threading.Thread):
     new_data = False  # true if new data is available
     timestamp = None  # timestamp of last data update
 
@@ -65,20 +63,20 @@ class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataS
         threading.Thread.__init__(self)  # call parent constructor
         if CONN_TYPE == 'TCP':
             # TCP/IP connection
-            self.client = ModbusTcpClient(host='192.168.1.170', port=1502)
+            self.client = ModbusTcpClient(host='192.168.1.1', port=1502)
             log.info('Connecting to Inverter via TCP/IP')
         elif CONN_TYPE == 'RTU':
             # serial rs 485 connection
-            self.client = ModbusClient(method='rtu', port=rs485_port, timeout=1, baudrate=9600)
+            self.client = ModbusClient(method='rtu', port=rs485_port, timeout=1, baudrate=19200)
             log.info('Connecting to Inverter via Serial RTU')
         else:
             log.debug('Can\'t connect to inverter - please specify connection type')
 
         # finally connect to the device
-        # try:
-        #    self.client.connect()   # establish connection
-        # except pymodbus.exceptions.ConnectionException as e:
-        #    log.debug('Failed to establish a connection to the device: ' + str(e))
+        try:
+            self.client.connect()  # establish connection
+        except pymodbus.exceptions.ConnectionException as e:
+            log.debug('Failed to establish a connection to the device: ' + str(e))
 
         # sunspec.sunspeclib.SunspecClient.__init__(self, self.client)
 
@@ -93,7 +91,7 @@ class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataS
 
     # Class destructor
     def __del__(self):
-        self.client.close()     # close client connection
+        self.client.close()  # close client connection
 
     # private methode reading data from the inverter
     def __readdata(self):
@@ -105,13 +103,13 @@ class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataS
         # read the coils from the the inverter according to the SUNSPEC protocol
         # result = self.client.read_coils(2, 16, unit=UNIT_ID)
 
-        self.data['Phase1_Output_Voltage'] = float(random.randrange(2250, 2450, 1)/10)
-        self.data['Phase1_Output_Current'] = float(random.randrange(10, 320, 1)/10)
+        self.data['Phase1_Output_Voltage'] = float(random.randrange(2250, 2450, 1) / 10)
+        self.data['Phase1_Output_Current'] = float(random.randrange(10, 320, 1) / 10)
         self.data['Phase1_Output_Frequency'] = float(round(random.random() * 50, 2))
-        self.data['Phase2_Output_Voltage'] = float(random.randrange(2200, 2460, 1)/10)
+        self.data['Phase2_Output_Voltage'] = float(random.randrange(2200, 2460, 1) / 10)
         self.data['Phase2_Output_Current'] = float(random.randrange(1, 32, 1))
         self.data['Phase2_Output_Frequency'] = float(round(random.random() * 50, 2))
-        self.data['Phase3_Output_Voltage'] = float(random.randrange(2250, 2450, 1)/10)
+        self.data['Phase3_Output_Voltage'] = float(random.randrange(2250, 2450, 1) / 10)
         self.data['Phase3_Output_Current'] = float(random.randrange(1, 32, 1))
         self.data['Phase3_Output_Frequency'] = float(round(random.random() * 50, 2))
         self.new_data = True
@@ -119,8 +117,8 @@ class RS485ReaderClass(threading.Thread, sunspec.delta_data_structure.DeltaDataS
 
     def run(self):
         while True:
-            self.__update()                     # read values via RS485
-            time.sleep(RS485_READ_INTERVAL)     # wait N seconds until next read
+            self.__update()  # read values via RS485
+            time.sleep(RS485_READ_INTERVAL)  # wait N seconds until next read
 
     # public method that returns the data as a JSON-Object
     def asJSON(self):
@@ -181,22 +179,22 @@ class WS(threading.Thread):
         while True:
             data = self.data.asJSON()
             if data:
-                self.pushData(data)     # push data via websocket to client (browser)
-                time.sleep(0.5)         # wait half second before pushing new data
+                self.pushData(data)  # push data via websocket to client (browser)
+                time.sleep(0.5)  # wait half second before pushing new data
 
     def pushData(self, data):
-        for websocket in self.connected.copy():         # loop through all registered clients
+        for websocket in self.connected.copy():  # loop through all registered clients
             response = websocket.send(data)
             asyncio.run_coroutine_threadsafe(response, ws_loop)
 
     async def handler(self, websocket, path):
-        self.connected.add(websocket)                   # register client connection
+        self.connected.add(websocket)  # register client connection
         try:
-            await websocket.recv()                      # receive incoming message
+            await websocket.recv()  # receive incoming message
         except websockets.ConnectionClosed:
             log.log(level=logging.INFO, msg='Client closed the connection, can\'t push anymore data!')
         finally:
-            self.connected.remove(websocket)            # remove client connection if done
+            self.connected.remove(websocket)  # remove client connection if done
 
 
 #
@@ -211,10 +209,10 @@ class ModBusServer(threading.Thread):
 
         # ModBus slave context
         self.store = ModbusSlaveContext(
-            di=ModbusSequentialDataBlock(0, [17]*100),
-            co=ModbusSequentialDataBlock(0, [17]*100),
-            hr=ModbusSequentialDataBlock(0, [17]*100),
-            ir=ModbusSequentialDataBlock(0, [17]*100)
+            di=ModbusSequentialDataBlock(0, [17] * 100),
+            co=ModbusSequentialDataBlock(0, [17] * 100),
+            hr=ModbusSequentialDataBlock(0, [17] * 100),
+            ir=ModbusSequentialDataBlock(0, [17] * 100)
         )
 
         self.context = ModbusServerContext(slaves=self.store, single=True)
@@ -257,10 +255,10 @@ modbus = ModBusServer(inverterdata)
 
 # start threads and websockets server
 try:
-    inverterdata.start()    # start the data polling thread
-    webpage.start()         # start the webserver thread
-    websock.start()         # start the websocket pusher thread
-    modbus.start()          # start the modbus server
+    inverterdata.start()  # start the data polling thread
+    webpage.start()  # start the webserver thread
+    websock.start()  # start the websocket pusher thread
+    modbus.start()  # start the modbus server
 
     ws_server = websockets.serve(websock.handler, HTTP_HOST_IP, 8000)
     ws_loop = asyncio.get_event_loop()
