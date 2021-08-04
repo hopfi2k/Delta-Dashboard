@@ -2,6 +2,7 @@ import json
 import socket
 import sys
 
+import time
 import pymodbus
 import logging
 from pymodbus.exceptions import ConnectionException
@@ -29,17 +30,22 @@ log = logging.getLogger()
 log.setLevel(logging.DEBUG)
 
 RS485_DEVICE = '/dev/ttyUSB0'
-client = ModbusClient(method='rtu', port=RS485_DEVICE, timeout=1, baudrate=19200, stopbits=1, bytesize=8, strict=False)
+client = ModbusClient(method='rtu', port=RS485_DEVICE, timeout=1, baudrate=19200, stopbits=1, bytesize=8, parity='E',
+                      strict=False)
 client.connect()
 
 # rr = client.read_holding_registers(40001, 1, unit=1)
-read = client.read_holding_registers(2, unit=UNIT)
+for i in range(1000):
+    read = client.read_holding_registers(i, unit=UNIT)
 
-if read.isError():
-    print('Error from inverter')
-else:
-    decoder = BinaryPayloadDecoder.fromRegisters(read.registers, byteorder=Endian.Big)
-    result = decoder.decode_16bit_uint()
+    if read.isError():
+        print('Error from inverter')
+        time.sleep(1)
+        continue
+
+    else:
+        decoder = BinaryPayloadDecoder.fromRegisters(read.registers, byteorder=Endian.Big)
+        result = decoder.decode_16bit_uint()
 
 # close client connection
 client.close()
